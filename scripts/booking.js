@@ -80,7 +80,7 @@
             <div class="booking-wizard-card">
               <div style="background: #F8FAFC; border-bottom: 1px solid var(--border-light); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.8125rem; color: var(--navy-900);">
                 <span><strong>APPOINTMENT REQUEST PORTAL:</strong> Submit a consultation request for confirmation by Dr. Patel's team.</span>
-                <span class="badge badge-teal">Marina del Rey Office &bull; (310) 822-1200</span>
+                <span class="badge badge-teal" style="white-space:nowrap; flex-shrink:0;">Marina del Rey &bull; (310) 822-1200</span>
               </div>
 
               <div class="booking-progress-bar">

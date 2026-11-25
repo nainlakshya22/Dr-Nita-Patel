@@ -233,6 +233,8 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.1;
+    renderer.domElement.style.maxWidth = '100%';
+    renderer.domElement.style.display = 'block';
     container.appendChild(renderer.domElement);
     Skin3D.renderer = renderer;
 
@@ -510,11 +512,13 @@
 
     function onResize() {
       if (!Skin3D.container || !Skin3D.camera || !Skin3D.renderer) return;
-      const nw = Skin3D.container.clientWidth || 600;
-      const nh = Skin3D.container.clientHeight || 460;
+      Skin3D.renderer.domElement.style.width = '100%';
+      const nw = Skin3D.container.clientWidth || 320;
+      const nh = Skin3D.container.clientHeight || 320;
       Skin3D.camera.aspect = nw / nh;
       Skin3D.camera.updateProjectionMatrix();
       Skin3D.renderer.setSize(nw, nh);
+      Skin3D.renderer.domElement.style.maxWidth = '100%';
     }
     window.addEventListener('resize', onResize);
 

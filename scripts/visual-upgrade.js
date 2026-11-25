@@ -61,6 +61,8 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
+    renderer.domElement.style.maxWidth = '100%';
+    renderer.domElement.style.display = 'block';
     heroBg.appendChild(renderer.domElement);
     VisualState.heroRenderer = renderer;
 
@@ -267,80 +269,90 @@
       const trustItems = heroContent.querySelectorAll('.trust-item');
       const visualFrame = document.querySelector('.hero-visual-frame');
 
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      // On mobile/compact viewports, keep hero headline & CTAs immediately readable without hiding at opacity 0
+      if (window.innerWidth <= 992) {
+        [badge, title, desc, visualFrame].forEach(el => {
+          if (el) gsap.set(el, { opacity: 1, y: 0, clearProps: 'transform' });
+        });
+        if (actions) gsap.set(actions.children, { opacity: 1, y: 0, clearProps: 'transform' });
+        if (trustItems.length) gsap.set(trustItems, { opacity: 1, y: 0, clearProps: 'transform' });
+      } else {
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      if (badge) tl.fromTo(badge, { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.5 });
+        if (badge) tl.fromTo(badge, { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.45 });
 
-      if (title) {
-        // Word-by-word cinematic typography stagger while preserving inner gold-gradient span
-        if (!title.dataset.splitDone) {
-          title.dataset.splitDone = '1';
-          const walkAndWrap = (node) => {
-            if (node.nodeType === 3) {
-              const words = node.textContent.split(/(\s+)/);
-              const frag = document.createDocumentFragment();
-              words.forEach(w => {
-                if (!w.trim()) {
-                  frag.appendChild(document.createTextNode(w));
-                } else {
-                  const span = document.createElement('span');
-                  span.className = 'hero-word-token';
-                  span.style.cssText = 'display:inline-block;';
-                  span.textContent = w;
-                  frag.appendChild(span);
-                }
-              });
-              node.parentNode.replaceChild(frag, node);
-            } else if (node.nodeType === 1) {
-              Array.from(node.childNodes).forEach(walkAndWrap);
-            }
-          };
-          walkAndWrap(title);
+        if (title) {
+          // Word-by-word cinematic typography stagger while preserving inner gold-gradient span
+          if (!title.dataset.splitDone) {
+            title.dataset.splitDone = '1';
+            const walkAndWrap = (node) => {
+              if (node.nodeType === 3) {
+                const words = node.textContent.split(/(\s+)/);
+                const frag = document.createDocumentFragment();
+                words.forEach(w => {
+                  if (!w.trim()) {
+                    frag.appendChild(document.createTextNode(w));
+                  } else {
+                    const span = document.createElement('span');
+                    span.className = 'hero-word-token';
+                    span.style.cssText = 'display:inline-block;';
+                    span.textContent = w;
+                    frag.appendChild(span);
+                  }
+                });
+                node.parentNode.replaceChild(frag, node);
+              } else if (node.nodeType === 1) {
+                Array.from(node.childNodes).forEach(walkAndWrap);
+              }
+            };
+            walkAndWrap(title);
+          }
+          const wordTokens = title.querySelectorAll('.hero-word-token');
+          if (wordTokens.length) {
+            tl.fromTo(wordTokens,
+              { opacity: 0, y: 26 },
+              { opacity: 1, y: 0, duration: 0.55, stagger: 0.05 },
+              '-=0.2'
+            );
+          }
         }
-        const wordTokens = title.querySelectorAll('.hero-word-token');
-        if (wordTokens.length) {
-          tl.fromTo(wordTokens,
-            { opacity: 0, y: 26 },
-            { opacity: 1, y: 0, duration: 0.65, stagger: 0.06 },
-            '-=0.2'
+
+        if (desc) tl.fromTo(desc, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55 }, '-=0.4');
+        if (actions) tl.fromTo(actions.children, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.08 }, '-=0.35');
+        if (trustItems.length) tl.fromTo(trustItems, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.08 }, '-=0.3');
+        if (visualFrame) {
+          tl.fromTo(visualFrame,
+            { opacity: 0, scale: 0.94, y: 28 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.85 },
+            '-=0.65'
           );
         }
       }
-
-      if (desc) tl.fromTo(desc, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7 }, '-=0.5');
-      if (actions) tl.fromTo(actions.children, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.55, stagger: 0.09 }, '-=0.45');
-      if (trustItems.length) tl.fromTo(trustItems, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, '-=0.35');
-      if (visualFrame) {
-        tl.fromTo(visualFrame,
-          { opacity: 0, scale: 0.94, y: 28 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.95 },
-          '-=0.75'
-        );
-      }
     }
 
-    // B. ScrollTrigger Section & Card Storytelling
-    if (window.ScrollTrigger) {
+    // B. ScrollTrigger Section & Card Storytelling (Skip opacity-0 scroll hiding on mobile <= 992px for instant, lag-free reading)
+    const isDesktopViewport = window.innerWidth > 992;
+    if (window.ScrollTrigger && isDesktopViewport) {
       // Section headers
       document.querySelectorAll('.section-header').forEach(el => {
         gsap.fromTo(el,
-          { opacity: 0, y: 28 },
+          { opacity: 0, y: 24 },
           {
-            opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
-            scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+            opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
+            scrollTrigger: { trigger: el, start: 'top 90%', once: true }
           }
         );
       });
 
-      // Staggered Service & Choice Cards with varied entrance offsets
+      // Staggered Service & Choice Cards
       document.querySelectorAll('.services-grid, .concern-card-grid').forEach(grid => {
         const items = grid.querySelectorAll('.service-card, .concern-choice-card');
         if (items.length) {
           gsap.fromTo(items,
-            { opacity: 0, y: 34, rotateX: 4 },
+            { opacity: 0, y: 26, rotateX: 3 },
             {
-              opacity: 1, y: 0, rotateX: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out',
-              scrollTrigger: { trigger: grid, start: 'top 86%', once: true }
+              opacity: 1, y: 0, rotateX: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out',
+              scrollTrigger: { trigger: grid, start: 'top 90%', once: true }
             }
           );
         }
@@ -349,46 +361,43 @@
       // Subtle Parallax on Clinic / Laser Suite Media
       document.querySelectorAll('.parallax-media').forEach(media => {
         gsap.fromTo(media,
-          { y: 18 },
+          { y: 14 },
           {
-            y: -18, ease: 'none',
-            scrollTrigger: { trigger: media, start: 'top bottom', end: 'bottom top', scrub: 0.6 }
+            y: -14, ease: 'none',
+            scrollTrigger: { trigger: media, start: 'top bottom', end: 'bottom top', scrub: 0.5 }
           }
         );
       });
 
-      // Doctor Profile Cinematic Sequence (About Doctor page & Home Intro)
-      const docSection = document.querySelector('.doctor-cinematic-section');
-      if (docSection) {
-        const docTl = gsap.timeline({
-          scrollTrigger: { trigger: docSection, start: 'top 78%', once: true }
-        });
-
-        const portrait = docSection.querySelector('.hero-visual-card');
-        const quote = docSection.querySelector('.quote-card-editorial');
-        const heading = docSection.querySelector('h2');
-        const paras = docSection.querySelectorAll('.doctor-bio-para');
-        const lineFill = docSection.querySelector('.doctor-timeline-fill');
-        const milestones = docSection.querySelectorAll('.timeline-milestone');
-        const cta = docSection.querySelector('.doctor-cta-row');
-
-        if (portrait) docTl.fromTo(portrait, { opacity: 0, scale: 0.95, y: 24 }, { opacity: 1, scale: 1, y: 0, duration: 0.7 });
-        if (heading) docTl.fromTo(heading, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 }, '-=0.45');
-        if (paras.length) docTl.fromTo(paras, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12 }, '-=0.35');
-        if (lineFill) docTl.fromTo(lineFill, { scaleY: 0 }, { scaleY: 1, duration: 0.8, ease: 'power2.inOut' }, '-=0.3');
-        if (milestones.length) docTl.fromTo(milestones, { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.45, stagger: 0.12 }, '-=0.55');
-        if (quote) docTl.fromTo(quote, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55 }, '-=0.4');
-        if (cta) docTl.fromTo(cta, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45 }, '-=0.25');
+      // Doctor Profile Editorial Reveals (Per-element triggers so tall columns never stick invisible)
+      document.querySelectorAll('.doctor-cinematic-section .hero-visual-card, .doctor-cinematic-section .quote-card-editorial, .doctor-cinematic-section .doctor-bio-para, .doctor-cinematic-section .timeline-milestone, .doctor-cinematic-section .doctor-cta-row').forEach(el => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1, y: 0, duration: 0.5, ease: 'power2.out',
+            scrollTrigger: { trigger: el, start: 'top 92%', once: true }
+          }
+        );
+      });
+      const lineFill = document.querySelector('.doctor-timeline-fill');
+      if (lineFill) {
+        gsap.fromTo(lineFill,
+          { scaleY: 0 },
+          {
+            scaleY: 1, duration: 0.75, ease: 'power2.inOut',
+            scrollTrigger: { trigger: lineFill, start: 'top 90%', once: true }
+          }
+        );
       }
 
       // Patient Journey Entrance
       const journeyGrid = document.querySelector('.journey-grid');
       if (journeyGrid) {
         gsap.fromTo(journeyGrid.children,
-          { opacity: 0, y: 24 },
+          { opacity: 0, y: 20 },
           {
-            opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'power2.out',
-            scrollTrigger: { trigger: journeyGrid, start: 'top 85%', once: true }
+            opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power2.out',
+            scrollTrigger: { trigger: journeyGrid, start: 'top 90%', once: true }
           }
         );
       }
@@ -399,12 +408,14 @@
           { clipPath: 'inset(7% 8% 7% 8% round 120px)', scale: 0.94 },
           {
             clipPath: 'inset(0% 0% 0% 0% round 20px)', scale: 1, ease: 'power2.out',
-            scrollTrigger: { trigger: frame, start: 'top 88%', end: 'top 38%', scrub: 0.5 }
+            scrollTrigger: { trigger: frame, start: 'top 90%', end: 'top 42%', scrub: 0.5 }
           }
         );
       });
+    }
 
-      // Scroll-Driven 3D Skin World Camera Movement
+    // Scroll-Driven 3D Skin World Camera Movement (works safely across desktop & mobile)
+    if (window.ScrollTrigger) {
       const skin3DSection = document.getElementById('skin-3d-section');
       if (skin3DSection) {
         ScrollTrigger.create({
@@ -423,7 +434,7 @@
 
   // 3. 3D TILT EFFECT ON CARDS (Desktop non-touch only)
   window.init3DTiltCards = function () {
-    if (VisualState.isTouchDevice || VisualState.hasReducedMotion) return;
+    if (VisualState.isTouchDevice || VisualState.hasReducedMotion || window.innerWidth <= 992) return;
 
     const cards = document.querySelectorAll('.service-card, .hero-visual-card, .concern-choice-card');
     cards.forEach(card => {
@@ -448,7 +459,7 @@
 
   // 4. MAGNETIC BUTTONS
   window.initMagneticButtons = function () {
-    if (VisualState.isTouchDevice || VisualState.hasReducedMotion) return;
+    if (VisualState.isTouchDevice || VisualState.hasReducedMotion || window.innerWidth <= 992) return;
 
     const buttons = document.querySelectorAll('.btn-gold, .btn-primary, .nita-widget-btn');
     buttons.forEach(btn => {
@@ -473,26 +484,33 @@
     });
   };
 
-  // 5. DELEGATED SUBTLE MEDICAL CUSTOM CURSOR FOLLOWER
+  // 5. DELEGATED SUBTLE MEDICAL CUSTOM CURSOR FOLLOWER (Desktop >992px only, hidden until mouse moves)
   function initCustomCursor() {
-    if (VisualState.isTouchDevice || VisualState.hasReducedMotion || VisualState.cursorInitialized) return;
+    if (VisualState.isTouchDevice || VisualState.hasReducedMotion || VisualState.cursorInitialized || window.innerWidth <= 992) return;
     VisualState.cursorInitialized = true;
 
     const cursorDot = document.createElement('div');
     cursorDot.id = 'medical-cursor-dot';
-    cursorDot.style.cssText = 'position:fixed;top:0;left:0;width:7px;height:7px;background:var(--gold-500);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s;';
+    cursorDot.style.cssText = 'position:fixed;top:0;left:0;width:7px;height:7px;background:var(--gold-500);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);opacity:0;transition:width 0.2s,height 0.2s,opacity 0.2s;';
     document.body.appendChild(cursorDot);
 
     const cursorRing = document.createElement('div');
     cursorRing.id = 'medical-cursor-ring';
-    cursorRing.style.cssText = 'position:fixed;top:0;left:0;width:30px;height:30px;border:1px solid rgba(197,168,128,0.5);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s,border-color 0.2s,background 0.2s;';
+    cursorRing.style.cssText = 'position:fixed;top:0;left:0;width:30px;height:30px;border:1px solid rgba(197,168,128,0.5);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);opacity:0;transition:width 0.2s,height 0.2s,border-color 0.2s,background 0.2s,opacity 0.2s;';
     document.body.appendChild(cursorRing);
 
-    let ringX = 0, ringY = 0, dotX = 0, dotY = 0;
+    let ringX = -100, ringY = -100, dotX = -100, dotY = -100;
 
     window.addEventListener('mousemove', (e) => {
+      if (window.innerWidth <= 992) {
+        cursorDot.style.opacity = '0';
+        cursorRing.style.opacity = '0';
+        return;
+      }
       dotX = e.clientX;
       dotY = e.clientY;
+      cursorDot.style.opacity = '1';
+      cursorRing.style.opacity = '1';
       cursorDot.style.left = `${dotX}px`;
       cursorDot.style.top = `${dotY}px`;
     }, { passive: true });

@@ -159,8 +159,11 @@ button, input, select, textarea {
 
 @media (max-width: 768px) {
   .section {
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 46px;
+    padding-bottom: 46px;
+  }
+  .top-banner-full {
+    display: none;
   }
 }
 
@@ -1123,16 +1126,23 @@ button, input, select, textarea {
   margin-bottom: 50px;
 }
 
+@media (max-width: 992px), (hover: none), (pointer: coarse) {
+  #medical-cursor-dot, #medical-cursor-ring {
+    display: none !important;
+  }
+}
+
 @media (max-width: 992px) {
   .hero-grid { grid-template-columns: 1fr; gap: 36px; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
+  .site-footer { padding-bottom: 96px; }
   .nav-menu { display: none; }
   .header-phone { display: none; }
   .mobile-menu-btn { display: flex !important; flex-shrink: 0; }
-  .preview-top-banner .container { flex-wrap: wrap; gap: 6px; justify-content: center; text-align: center; }
+  .preview-top-banner .container { flex-wrap: wrap; gap: 6px; justify-content: space-between; }
   .split-grid, .split-grid-asym, .split-grid-doctor, .three-col-grid {
     grid-template-columns: 1fr !important;
-    gap: 28px !important;
+    gap: 24px !important;
   }
   .admin-shell { flex-direction: column !important; }
   .admin-sidebar { width: 100% !important; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -1141,18 +1151,39 @@ button, input, select, textarea {
 }
 
 @media (max-width: 600px) {
+  .container { padding-left: 16px; padding-right: 16px; }
   .footer-grid { grid-template-columns: 1fr; }
   .header-actions .btn-gold { display: none; }
   .logo-symbol { width: 38px; height: 38px; flex-shrink: 0; }
-  .logo-text h1 { font-size: 0.96rem; }
-  .logo-text p { font-size: 0.58rem; letter-spacing: 0.08em; }
-  .preview-top-banner { padding: 6px 10px; font-size: 0.72rem; }
-  .hero-content h1 { font-size: 2.25rem; }
-  .hero-actions { flex-direction: column; align-items: stretch; }
-  .hero-trust-row { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .hero-visual-card img { height: 380px; }
-  .ba-container { height: 320px; }
-  .booking-content-pane { padding: 24px 18px; }
+  .logo-text { min-width: 0; }
+  .logo-text h1 { font-size: 0.96rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .logo-text p { font-size: 0.56rem; letter-spacing: 0.04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .preview-top-banner { padding: 6px 12px; font-size: 0.7rem; }
+  .preview-top-banner span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; display: block; }
+  .hero-section { padding: 52px 0 64px; }
+  .hero-content h1 { font-size: 2.15rem; }
+  .hero-desc { font-size: 1rem; margin-bottom: 24px; }
+  .hero-actions { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 32px; }
+  .hero-trust-row { flex-direction: row; flex-wrap: wrap; gap: 20px; padding-top: 20px; }
+  .hero-visual-card img { height: 340px; }
+  .hero-floating-badge { bottom: 12px; left: 12px; right: 12px; padding: 12px; flex-wrap: wrap; gap: 8px; }
+  .hero-glass-hud { top: 12px; right: 12px; padding: 8px 10px; }
+  .section-header { margin-bottom: 32px; }
+  .section-header h2 { font-size: 1.75rem; }
+  .ba-container { height: 280px; }
+  .ba-badge { font-size: 0.64rem; padding: 4px 8px; bottom: 10px; max-width: 44%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ba-badge-before { right: 10px; }
+  .ba-badge-after { left: 10px; }
+  .ba-fullscreen-btn { top: 10px; right: 10px; padding: 4px 10px; font-size: 0.68rem; }
+  .skin-3d-controls-bar { top: auto; bottom: 42px; left: 50%; transform: translateX(-50%); padding: 4px 6px; }
+  #skin-3d-canvas-container { height: 320px !important; }
+  #skin-3d-info-card { padding: 20px 16px !important; }
+  .service-card { padding: 24px 18px; }
+  .service-card-visual { margin: -24px -18px 16px; }
+  .booking-progress-bar { display: grid; grid-template-columns: repeat(5, 1fr); overflow: visible; }
+  .booking-step-tab { padding: 10px 4px; font-size: 0.68rem; white-space: normal; line-height: 1.25; }
+  .booking-content-pane { padding: 20px 16px; }
+  .concern-choice-card { padding: 16px; }
 }
 
 /* ==========================================================================
@@ -1165,6 +1196,17 @@ button, input, select, textarea {
 
 .btn:active {
   transform: scale(0.97) !important;
+}
+
+.split-grid > *,
+.split-grid-asym > *,
+.split-grid-doctor > *,
+.three-col-grid > *,
+.explorer-shell > *,
+.services-grid > *,
+.concern-card-grid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Reusable Responsive Grids */
@@ -1964,6 +2006,18 @@ button, input, select, textarea {
   .explorer-shell {
     grid-template-columns: 1fr;
   }
+  .explorer-tab:hover {
+    transform: none;
+  }
+  .explorer-tab {
+    padding: 14px;
+  }
+  .explorer-stage-body {
+    padding: 20px 16px;
+  }
+  .explorer-treatment-chips {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Before/After Fullscreen Lightbox & Keyboard Focus */
@@ -2026,6 +2080,95 @@ button, input, select, textarea {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Mobile Layout & Cascade Fixes (kept after desktop component rules) */
+@media (max-width: 768px) {
+  .preview-top-banner .top-banner-full {
+    display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .preview-top-banner {
+    padding: 5px 0;
+    font-size: 0.66rem;
+  }
+  .preview-top-banner .container {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px !important;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .preview-top-banner .container > span {
+    display: block;
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.63rem;
+  }
+  .preview-top-banner .container > div {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 8px !important;
+  }
+  .preview-top-banner .container > div a {
+    font-size: 0.64rem;
+    white-space: nowrap;
+  }
+  .preview-top-banner .container > div a[href="#clinic-portal"],
+  .preview-top-banner .container > div button {
+    padding: 2px 7px !important;
+  }
+
+  .logo-text p {
+    font-size: 0.52rem;
+    letter-spacing: 0.02em;
+    white-space: normal;
+    line-height: 1.25;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .skin-3d-controls-bar {
+    top: auto;
+    right: auto;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100% - 20px);
+    height: auto;
+    padding: 4px 6px;
+    gap: 4px;
+  }
+  .skin-3d-ctrl-btn {
+    padding: 4px 9px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .ba-badge {
+    bottom: 24px;
+    font-size: 0.64rem;
+    padding: 4px 9px;
+    max-width: 44%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ba-badge-before {
+    right: 10px;
+  }
+  .ba-badge-after {
+    left: 10px;
   }
 }
 

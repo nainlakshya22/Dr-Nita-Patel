@@ -423,17 +423,17 @@
           <div class="split-grid-asym">
             <!-- 3D Canvas Box -->
             <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(197,168,128,0.3); border-radius: var(--radius-xl); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); position: relative;">
-              <div class="skin-3d-controls-bar" aria-label="3D Camera Controls">
-                <button type="button" class="skin-3d-ctrl-btn" onclick="window.zoomSkin3D(-0.55)" title="Zoom In" aria-label="Zoom In">+ Zoom</button>
-                <button type="button" class="skin-3d-ctrl-btn" onclick="window.zoomSkin3D(0.55)" title="Zoom Out" aria-label="Zoom Out">&minus;</button>
-                <button type="button" class="skin-3d-ctrl-btn" onclick="window.resetSkin3DView()" title="Reset 3D View" aria-label="Reset View">&#8634; Reset</button>
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding:10px 16px; border-bottom:1px solid rgba(197,168,128,0.18); background:rgba(11,21,33,0.45);">
+                <span style="font-size: 0.72rem; color: #94A3B8;">Drag to rotate &bull; Click layer &bull; Scroll to zoom</span>
+                <span class="badge badge-demo" style="font-size: 0.65rem;">Interactive 3D Bio-Model</span>
               </div>
-              <div id="skin-3d-canvas-container" style="width: 100%; height: 460px; cursor: grab;"></div>
-              <div style="position: absolute; bottom: 16px; left: 20px; font-size: 0.75rem; color: #94A3B8; pointer-events: none; display: flex; align-items: center; gap: 6px;">
-                Drag to rotate &bull; Click layer to focus &bull; Scroll to zoom
-              </div>
-              <div style="position: absolute; top: 16px; right: 20px; pointer-events: none;">
-                <span class="badge badge-demo" style="font-size: 0.68rem;">Interactive 3D Bio-Model</span>
+              <div style="position: relative;">
+                <div class="skin-3d-controls-bar" aria-label="3D Camera Controls">
+                  <button type="button" class="skin-3d-ctrl-btn" onclick="window.zoomSkin3D(-0.55)" title="Zoom In" aria-label="Zoom In">+ Zoom</button>
+                  <button type="button" class="skin-3d-ctrl-btn" onclick="window.zoomSkin3D(0.55)" title="Zoom Out" aria-label="Zoom Out">&minus;</button>
+                  <button type="button" class="skin-3d-ctrl-btn" onclick="window.resetSkin3DView()" title="Reset 3D View" aria-label="Reset View">&#8634; Reset</button>
+                </div>
+                <div id="skin-3d-canvas-container" style="width: 100%; height: 430px; cursor: grab;"></div>
               </div>
             </div>
 
@@ -486,8 +486,8 @@
             <div class="ba-handle" id="ba-home-handle" tabindex="0" role="slider" aria-label="Before and after comparison slider. Use left and right arrow keys to adjust." aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
               <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </div>
-            <span class="ba-badge ba-badge-before">Illustrative Baseline</span>
-            <span class="ba-badge ba-badge-after">Illustrative Post-Care Concept</span>
+            <span class="ba-badge ba-badge-before">Baseline</span>
+            <span class="ba-badge ba-badge-after">Post-Care Concept</span>
           </div>
 
           <div style="text-align: center; margin-top: 24px;">
@@ -517,9 +517,9 @@
                 <span class="badge badge-demo" style="position: absolute; top: 14px; left: 14px; font-size: 0.68rem;">Illustrative Suite Visual</span>
               </div>
               <div class="tech-callout-box" id="home-tech-callout">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:4px;">
                   <strong style="color:var(--gold-400); font-size:0.95rem;">1. Sciton Halo™ Hybrid Optical Arm (1470nm / 2940nm)</strong>
-                  <a href="#treatment/halo-laser" style="color:#FFF; font-size:0.78rem; text-decoration:underline;">View Protocol &rarr;</a>
+                  <a href="#treatment/halo-laser" style="color:#FFF; font-size:0.78rem; text-decoration:underline; white-space:nowrap; flex-shrink:0;">View Protocol &rarr;</a>
                 </div>
                 <p style="color:#CBD5E1; font-size:0.82rem; line-height:1.5;">Synchronizes non-ablative dermal coagulation with targeted epidermal resurfacing for calibrated recovery.</p>
               </div>
@@ -1219,8 +1219,8 @@
                 <div class="ba-handle" id="ba-gallery-handle" tabindex="0" role="slider" aria-label="Before and after comparison slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
                   <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </div>
-                <span class="ba-badge ba-badge-before">Illustrative Baseline</span>
-                <span class="ba-badge ba-badge-after">Illustrative Post-Care Concept</span>
+                <span class="ba-badge ba-badge-before">Baseline</span>
+                <span class="ba-badge ba-badge-after">Post-Care Concept</span>
               </div>
             </div>
           </div>
@@ -1618,7 +1618,7 @@
         <div style="animation: fadeIn 0.25s ease;">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap;">
             <strong style="color:var(--gold-400); font-size:0.95rem;">${info.title}</strong>
-            <a href="${info.link}" style="color:#FFF; font-size:0.78rem; text-decoration:underline;">View Protocol &rarr;</a>
+            <a href="${info.link}" style="color:#FFF; font-size:0.78rem; text-decoration:underline; white-space:nowrap; flex-shrink:0;">View Protocol &rarr;</a>
           </div>
           <p style="color:#CBD5E1; font-size:0.82rem; line-height:1.5;">${info.desc}</p>
         </div>
@@ -1723,7 +1723,7 @@
               <div class="explorer-treatment-chips">
                 ${treatments.map(t => `
                   <a href="#treatment/${t.id}" class="explorer-chip">
-                    <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${t.title.split('(')[0].trim()}</span>
+                    <span style="line-height:1.35;">${t.title.split('(')[0].trim()}</span>
                     <span style="color:var(--gold-600); flex-shrink:0;">&rarr;</span>
                   </a>
                 `).join('')}
